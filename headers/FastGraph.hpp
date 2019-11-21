@@ -22,7 +22,7 @@ class FastGraph : public Graph {
 
    private:
     std::vector<std::vector<int32>> adjency;
-    bool checkNodesID(const uint first, const uint second = 0);
+    bool nodeIDValid(const uint first, const uint second = 0);
 
    public:
     FastGraph(const uint nodeCount);

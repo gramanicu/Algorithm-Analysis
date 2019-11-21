@@ -24,7 +24,7 @@ FastGraph::~FastGraph() {}
  * @param second Second node to check
  * @return Whether the ID's are valid
  */
-bool FastGraph::checkNodesID(const uint first, const uint second) {
+bool FastGraph::nodeIDValid(const uint first, const uint second) {
     if (first < _nodeCount) {
         if (second < _nodeCount) {
             if (first != second) {
@@ -37,23 +37,29 @@ bool FastGraph::checkNodesID(const uint first, const uint second) {
 
 /**
  * @brief Makes a unidirectional link from the source to the target node
+ * Cost must be != 0
  * @param source Source node ID
  * @param target Target node ID
  * @param cost The length/cost of the link/edge (optional, default 1)
  */
 void FastGraph::link(const uint source, const uint target, const int cost) {
+    if (!nodeIDValid(source, target)) return;
+    if (!cost) return;
     adjency[source][target] = cost;
 }
 
 /**
  * @brief Makes a bidirectional link between the source and the target node
+ * Cost must be != 0
  * @param source Source node ID
  * @param target Target node ID
  * @param cost The length/cost of the link/edge (optional, default 1)
  */
 void FastGraph::linkBoth(const uint source, const uint target, const int cost) {
-    link(source, target, cost);
-    link(target, source, cost);
+    if (!nodeIDValid(source, target)) return;
+    if (!cost) return;
+    adjency[source][target] = cost;
+    adjency[target][source] = cost;
 }
 
 /**
@@ -62,7 +68,8 @@ void FastGraph::linkBoth(const uint source, const uint target, const int cost) {
  * @param target Target node ID
  */
 void FastGraph::unlink(const uint source, const uint target) {
-    link(source, target, 0);
+    if (!nodeIDValid(source, target)) return;
+    adjency[source][target] = 0;
 }
 
 /**
@@ -72,8 +79,9 @@ void FastGraph::unlink(const uint source, const uint target) {
  * @param target Target node ID
  */
 void FastGraph::unlinkBoth(const uint source, const uint target) {
-    unlink(source, target);
-    unlink(target, source);
+    if (!nodeIDValid(source, target)) return;
+    adjency[source][target] = 0;
+    adjency[target][source] = 0;
 }
 
 /**
