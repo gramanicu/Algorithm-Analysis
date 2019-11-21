@@ -20,7 +20,7 @@ class Graph {
      * @brief Method to print the contents of the graph
      * @return std::ostream&
      */
-    std::ostream& print() const;
+    virtual void print(std::ostream& output) const;
 
    public:
     Graph();
@@ -66,12 +66,12 @@ class Graph {
     virtual int nodesCount() const;
 
     /**
-     * @brief Computes the shortest path cost using Dijsktra's algorithm
+     * @brief Computes the shortest path cost using Dijkstra's algorithm
      * @param source Source node ID
      * @param target Target node ID
      * @return The cost (int)
      */
-    virtual int Dijskstra(const int source, const int target) const;
+    virtual int Dijkstra(const int source, const int target) const;
 
     /**
      * @brief Computes the shortest path cost using the Floyd-Warshall algorithm
@@ -90,10 +90,12 @@ class Graph {
     virtual int Johnson(const int source, const int target) const;
 
     // Operator overload to print the content of the graph
-    friend std::ostream& operator<<(std::ostream& output, const Graph& g) {
-        output << g.print();
-        return output;
-    }
+    friend std::ostream& operator<<(std::ostream& output, const Graph& g);
 };
+
+inline std::ostream& operator<<(std::ostream& output, const Graph& g) {
+    g.print(output);
+    return output;
+}
 
 #endif  // HEADERS_GRAPH_HPP_
