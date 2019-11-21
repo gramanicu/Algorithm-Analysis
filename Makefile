@@ -15,7 +15,7 @@ build: $(OBJ)
 	$(info Compiling code...)
 	@$(CC) -o $(EXE) $^ $(CFLAGS) ||:
 	$(info Compilation successfull)
-	-@rm -f *.o ||:
+	-@rm -f */*.o ||:
 	@$(MAKE) -s gitignore ||:
 
 %.o: %.cpp

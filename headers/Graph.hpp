@@ -16,24 +16,24 @@ class Graph {
    protected:
     uint _nodeCount;
 
+    Graph();
+    Graph(const uint nodeCount);
+
     /**
      * @brief Method to print the contents of the graph
      * @return std::ostream&
      */
-    virtual void print(std::ostream& output) const;
+    virtual void print(std::ostream& output) const = 0;
 
    public:
-    Graph();
-    Graph(const int nodeCount);
-    ~Graph();
-
     /**
      * @brief Makes a unidirectional link from the source to the target node
      * @param source Source node ID
      * @param target Target node ID
      * @param cost The length/cost of the link/edge (optional, default 1)
      */
-    virtual void link(const int source, const int target, const int cost = 1);
+    virtual void link(const uint source, const uint target,
+                      const int cost = 1) = 0;
 
     /**
      * @brief Makes a bidirectional link between the source and the target node
@@ -41,15 +41,15 @@ class Graph {
      * @param target Target node ID
      * @param cost The length/cost of the link/edge (optional, default 1)
      */
-    virtual void linkBoth(const int source, const int target,
-                          const int cost = 1);
+    virtual void linkBoth(const uint source, const uint target,
+                          const int cost = 1) = 0;
 
     /**
      * @brief Removes the link from the source to the target node
      * @param source Source node ID
      * @param target Target node ID
      */
-    virtual void unlink(const int source, const int target);
+    virtual void unlink(const uint source, const uint target) = 0;
 
     /**
      * @brief Removes the links between the nodes
@@ -57,13 +57,13 @@ class Graph {
      * @param source Source node ID
      * @param target Target node ID
      */
-    virtual void unlinkBoth(const int source, const int target);
+    virtual void unlinkBoth(const uint source, const uint target) = 0;
 
     /**
      * @brief The number of nodes in the graph
      * @return int
      */
-    virtual int nodesCount() const;
+    virtual int nodesCount() const = 0;
 
     /**
      * @brief Computes the shortest path cost using Dijkstra's algorithm
@@ -71,7 +71,7 @@ class Graph {
      * @param target Target node ID
      * @return The cost (int)
      */
-    virtual int Dijkstra(const int source, const int target) const;
+    virtual int Dijkstra(const uint source, const uint target) const = 0;
 
     /**
      * @brief Computes the shortest path cost using the Floyd-Warshall algorithm
@@ -79,7 +79,7 @@ class Graph {
      * @param target Target node ID
      * @return The cost (int)
      */
-    virtual int FloydWarshall(const int source, const int target) const;
+    virtual int FloydWarshall(const uint source, const uint target) const = 0;
 
     /**
      * @brief Computes the shortest path cost using Johnson's algorithm
@@ -87,12 +87,14 @@ class Graph {
      * @param target Target node ID
      * @return The cost (int)
      */
-    virtual int Johnson(const int source, const int target) const;
+    virtual int Johnson(const uint source, const uint target) const = 0;
 
     // Operator overload to print the content of the graph
     friend std::ostream& operator<<(std::ostream& output, const Graph& g);
 };
 
+inline Graph::Graph() {}
+inline Graph::Graph(const uint nodeCount) : _nodeCount(nodeCount) {}
 inline std::ostream& operator<<(std::ostream& output, const Graph& g) {
     g.print(output);
     return output;
