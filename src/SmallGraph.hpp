@@ -1,42 +1,35 @@
 // Copyright 2019 Grama Nicolae
-#ifndef HEADERS_FASTGRAPH_HPP_
-#define HEADERS_FASTGRAPH_HPP_
+#ifndef HEADERS_SMALLGRAPH_HPP_
+#define HEADERS_SMALLGRAPH_HPP_
 
+#include <vector>
 #include "Graph.hpp"
 
-#define int32 int_fast32_t
-
 /**
- * @brief A time-optimised graph
- * This is a graph implementation that is speed optimised. To do so, it uses an
- * adjency matrix, which has the advantage of fast access times. The main
- * downside of this specific implementation is that it is very
- * space-ineffiecint, especially for sparse graphs. For example, for a 10000
- * nodes graph, around 800 MB of RAM will be utilised
+ * @brief A space-optimised graph
+ *
  */
 
-class FastGraph : public Graph {
+class SmallGraph : public Graph {
    protected:
-    /**
-     * @brief Method to print the contents of the graph
-     * @return std::ostream&
-     */
     void print(std::ostream& output) const override;
 
    private:
-    std::vector<std::vector<int32>> adjency;
+    std::vector<std::vector<std::pair<uint, int32>>> adjency;
+
+    bool edgeExist(const uint source, const uint target) const;
 
    public:
     /**
-     * @brief Construct a new Fast Graph object
+     * @brief Construct a new Small Graph object
      * Builds the adjency matrix and updates the node count
      * @param nodeCount
      */
-    FastGraph(const uint nodeCount);
+    SmallGraph(const uint nodeCount);
     /**
-     * @brief Destroy the Fast Graph object
+     * @brief Destroy the Small Graph object
      */
-    ~FastGraph();
+    ~SmallGraph();
 
     /**
      * @brief Makes a unidirectional link from the source to the target node
@@ -104,4 +97,4 @@ class FastGraph : public Graph {
     int32 Johnson(const uint source, const uint target) const override;
 };
 
-#endif  // HEADERS_FASTGRAPH_HPP_
+#endif  // HEADERS_SMALLGRAPH_HPP_

@@ -23,7 +23,7 @@ build: $(OBJ)
 
 # Executes the binary
 run: clean build
-	./$(EXE)
+	./$(EXE) < input.txt
 
 # Deletes the binary and object files
 clean:
@@ -38,7 +38,7 @@ beauty:
 # Checks the memory for leaks
 MFLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes
 memory:clean build
-	valgrind $(MFLAGS) ./$(EXE)
+	valgrind $(MFLAGS) ./$(EXE) < input.txt
 
 # Adds and updates gitignore rules
 gitignore:

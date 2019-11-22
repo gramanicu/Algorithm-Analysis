@@ -8,24 +8,14 @@ FastGraph::FastGraph(const uint nodeCount) : Graph(nodeCount) {
 
 FastGraph::~FastGraph() {}
 
-bool FastGraph::nodeIDValid(const uint first, const uint second) {
-    if (first < _nodeCount) {
-        if (second < _nodeCount) {
-            if (first != second) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-void FastGraph::link(const uint source, const uint target, const int cost) {
+void FastGraph::link(const uint source, const uint target, const int32 cost) {
     if (!nodeIDValid(source, target)) return;
     if (!cost) return;
     adjency[source][target] = cost;
 }
 
-void FastGraph::linkBoth(const uint source, const uint target, const int cost) {
+void FastGraph::linkBoth(const uint source, const uint target,
+                         const int32 cost) {
     if (!nodeIDValid(source, target)) return;
     if (!cost) return;
     adjency[source][target] = cost;
@@ -43,17 +33,19 @@ void FastGraph::unlinkBoth(const uint source, const uint target) {
     adjency[target][source] = 0;
 }
 
-int FastGraph::nodesCount() const { return _nodeCount; }
+int32 FastGraph::nodesCount() const { return _nodeCount; }
 
-int FastGraph::Dijkstra(const uint source, const uint target) const {
+int32 FastGraph::Dijkstra(const uint source, const uint target) const {
     return 0;
 }
 
-int FastGraph::FloydWarshall(const uint source, const uint target) const {
+int32 FastGraph::FloydWarshall(const uint source, const uint target) const {
     return 0;
 }
 
-int FastGraph::Johnson(const uint source, const uint target) const { return 0; }
+int32 FastGraph::Johnson(const uint source, const uint target) const {
+    return 0;
+}
 
 void FastGraph::print(std::ostream &output) const {
     for (auto &row : adjency) {
