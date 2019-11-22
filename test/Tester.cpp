@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../headers/FastGraph.hpp"
+#include "../src/FastGraph.hpp"
 
 int main() {
     FastGraph g(10);

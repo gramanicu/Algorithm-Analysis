@@ -1,5 +1,5 @@
 // Copyright 2019 Grama Nicolae
-#include "../headers/FastGraph.hpp"
+#include "FastGraph.hpp"
 
 FastGraph::FastGraph(const uint nodeCount) : Graph(nodeCount) {
     adjency = std::vector<std::vector<int32>>(nodeCount,
