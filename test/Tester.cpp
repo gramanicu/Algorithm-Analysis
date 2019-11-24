@@ -2,9 +2,9 @@
 #include "../src/GraphDriver.hpp"
 
 int main() {
-    GraphDriver::getInstance();
+    GraphDriver driver;
 
-    GraphDriver::readData(std::cin);
+    driver.readData(std::cin);
 
     return 0;
 }

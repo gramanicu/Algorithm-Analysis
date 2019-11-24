@@ -3,22 +3,11 @@
 
 #define DENSITY_THRESHOLD 1.5f
 
-GraphDriver::GraphDriver() {}
-GraphDriver::GraphDriver(const GraphDriver& other) {}
-GraphDriver* GraphDriver::instance = nullptr;
 Graph* GraphDriver::graph = nullptr;
 
-GraphDriver::~GraphDriver() { 
-    delete graph;
-    delete instance; 
-}
+GraphDriver::GraphDriver() {}
 
-GraphDriver* GraphDriver::getInstance() {
-    if (instance == nullptr) {
-        instance = new GraphDriver();
-    }
-    return instance;
-}
+GraphDriver::~GraphDriver() { delete graph; }
 
 void GraphDriver::readData(std::istream& input) {
     uint nodeCount, edgeCount = 0;
@@ -34,21 +23,21 @@ void GraphDriver::readData(std::istream& input) {
 
     input >> nodeCount;
 
-    std::cout << "Vertices : " << nodeCount << "\n";
-    std::cout << "Edges : " << edgeCount << "\n";
+    // std::cout << "Vertices : " << nodeCount << "\n";
+    // std::cout << "Edges : " << edgeCount << "\n";
 
     double graphDensity;
 
     graphDensity = 2.0 * double(edgeCount) /
                    (double(nodeCount) * (double(nodeCount) - 1.0f));
-    std::cout << "Graph density " << graphDensity << "\n";
+    // std::cout << "Graph density " << graphDensity << "\n";
 
     if (graphDensity < DENSITY_THRESHOLD) {
         graph = new SmallGraph(nodeCount);
-        std::cout << "Sparse Graph\n";
+        // std::cout << "Sparse Graph\n";
     } else {
         graph = new FastGraph(nodeCount);
-        std::cout << "Dense Graph\n";
+        // std::cout << "Dense Graph\n";
     }
 
     while (!input.eof()) {
@@ -59,6 +48,4 @@ void GraphDriver::readData(std::istream& input) {
 
         graph->link(source, target, cost);
     }
-
-    std::cout << *graph << '\n';
 }

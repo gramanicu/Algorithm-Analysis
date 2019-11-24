@@ -25,6 +25,25 @@ class FastGraph : public Graph {
 
    private:
     std::vector<std::vector<int32>> adjency;
+    uint _nodeCount;
+    
+    /**
+     * @brief Returns the neighbouring nodes of the source node
+     * Only the nodes that can be reached starting from the source node
+     * @param source The starting node
+     * @return std::vector<uint> The list of neighbours
+     */
+    std::vector<uint> neighbours(const uint source) const;
+
+    /**
+     * @brief Check if the specified id's are valid (can check just 1)
+     * If two id's are specified, they are valid if they are lower than the
+     * number of nodes (quite obvious), and if they are different
+     * @param first First node to check
+     * @param second Second node to check
+     * @return Whether the ID's are valid
+     */
+    bool nodeIDValid(const uint first, const uint second = 0) const;
 
    public:
     /**

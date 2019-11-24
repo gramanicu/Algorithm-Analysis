@@ -16,16 +16,12 @@
 class GraphDriver {
    private:
     // Disabling constructor, copy and assignment
-    GraphDriver();
-    GraphDriver(const GraphDriver& other);
-    GraphDriver& operator=(const GraphDriver& other);
-    static GraphDriver* instance;
     static Graph* graph;
 
    public:
+    GraphDriver();
     ~GraphDriver();
 
-    static GraphDriver* getInstance();
     static void readData(std::istream& input);
 };
 

@@ -1,7 +1,7 @@
 // Copyright 2019 Grama Nicolae
 #include "SmallGraph.hpp"
 
-SmallGraph::SmallGraph(const uint nodeCount) : Graph(nodeCount) {
+SmallGraph::SmallGraph(const uint nodeCount) : _nodeCount(nodeCount) {
     std::pair<uint, int32> emptyPair = std::make_pair(0, 0);
     adjency = std::vector<std::vector<std::pair<uint, int32>>>(
         nodeCount, std::vector<std::pair<uint, int32>>(0, emptyPair));
@@ -69,8 +69,53 @@ void SmallGraph::unlinkBoth(const uint source, const uint target) {
 
 int32 SmallGraph::nodesCount() const { return _nodeCount; }
 
+std::vector<std::pair<uint, int32>> SmallGraph::neighbours(const uint source) const {
+    std::vector<std::pair<uint, int32>> neighbours;
+    
+    for (auto &link : adjency[source]) {
+        if(link.second != 0) {
+            neighbours.push_back(link);
+        }   
+    }
+    
+    return neighbours;
+}
+
 int32 SmallGraph::Dijkstra(const uint source, const uint target) const {
-    return 0;
+    
+    // Distance to the other nodes
+    std::vector<int32> distance = std::vector<int32>(_nodeCount, INT32_MAX);
+    distance[source] = 0;
+
+    // Start from source
+    std::queue<uint> toVisit;
+    std::vector<bool> visited = std::vector<bool>(_nodeCount, false);
+    toVisit.push(source);
+
+    while(!toVisit.empty()) {
+        uint cNode = toVisit.front();
+
+        // Add unvisited nodes to the graph & update distances
+        for(auto &neighbour : neighbours(cNode)) {
+            if(visited[neighbour.first] == false) {
+                toVisit.push(neighbour.first);
+                visited[neighbour.first] = true;
+            }
+
+            // The distance from the current node to the neighbour
+            int32 currentDistance = distance[cNode] + neighbour.second;
+
+            // If the distance is shorter, update the distance            
+            if(currentDistance < distance[neighbour.first]) {
+                distance[neighbour.first] = currentDistance;
+            }
+        }
+
+        // The node was visited
+        toVisit.pop();
+    }
+
+    return distance[target];
 }
 
 int32 SmallGraph::FloydWarshall(const uint source, const uint target) const {
@@ -87,4 +132,15 @@ void SmallGraph::print(std::ostream &output) const {
             output << i << " -> " << node.first << " : " << node.second << "\n";
         }
     }
+}
+
+bool SmallGraph::nodeIDValid(const uint first, const uint second) const {
+    if (first < _nodeCount) {
+        if (second < _nodeCount) {
+            if (first != second) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
