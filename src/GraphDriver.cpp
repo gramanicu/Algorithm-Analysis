@@ -38,11 +38,13 @@ void GraphDriver::readData(std::istream& input) {
 
     if (graphDensity < DENSITY_THRESHOLD) {
         graph = new SmallGraph(nodeCount);
-        // std::cout << "Sparse/Small Graph\n";
+        std::cout << "Sparse/Small Graph\n";
     } else {
         graph = new FastGraph(nodeCount);
-        // std::cout << "Dense/Fast Graph\n";
+        std::cout << "Dense/Fast Graph\n";
     }
+    // graph = new FastGraph(nodeCount);
+    // graph = new SmallGraph(nodeCount);
 
     for (uint i = 0 ; i < edgeCount ; ++i) {
         uint source, target;
@@ -57,5 +59,7 @@ void GraphDriver::readData(std::istream& input) {
 
     // std::cout << *graph << "\n";
 
-    std::cout << graph->Dijkstra();
+    std::cout << graph->Dijkstra() << "\n";
+    std::cout << graph->FloydWarshall() << "\n";
+    std::cout << graph->Johnson() << "\n";
 }

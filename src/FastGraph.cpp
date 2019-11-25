@@ -92,7 +92,39 @@ std::vector<std::vector<int32>> FastGraph::Dijkstra() const {
 }
 
 std::vector<std::vector<int32>> FastGraph::FloydWarshall() const {
-    std::vector<std::vector<int32>> distances;
+    std::vector<std::vector<int32>> distances = adjency;
+
+    // Adjust the graph for the algorithm (infinite distance between unlinked nodes)
+    for(auto &row : distances) {
+        for(auto &elem : row) {
+            if(elem == 0) {
+                elem = INT32_MAX;
+            }
+        }
+    }
+
+    // No loops (0 distance to the node itself)
+    for (uint i = 0 ; i < _nodeCount; ++i) {
+        distances[i][i] = 0;
+    }
+    
+    for (uint inter = 0; inter < _nodeCount; ++inter) {
+        for(uint source = 0 ; source < _nodeCount; ++source) {
+            for (uint target = 0; target < _nodeCount; ++target) {
+                int32 newDistance = distances[source][inter] + distances[inter][target];
+
+                // Keep the sum infinite, if that is the case
+                if(distances[source][inter] == INT32_MAX || distances[inter][target] == INT32_MAX) {
+                    newDistance = INT32_MAX;
+                }
+
+                if(newDistance < distances[source][target]) {
+                    distances[source][target] = newDistance;
+                }
+            }
+        }
+    }
+
     return distances;
 }
 

@@ -125,7 +125,36 @@ std::vector<std::vector<int32>> SmallGraph::Dijkstra() const {
 }
 
 std::vector<std::vector<int32>> SmallGraph::FloydWarshall() const {
-    std::vector<std::vector<int32>> distances;
+    std::vector<std::vector<int32>> distances = std::vector<std::vector<int32>>(_nodeCount, std::vector<int32>(_nodeCount, INT32_MAX));
+
+    // Create the initial matrix (adjency matrix)
+    for (uint i = 0 ; i < _nodeCount; ++i) {
+        distances[i][i] = 0;
+    }
+
+    for(uint source = 0 ; source < _nodeCount; ++source) {
+        for(auto& target : adjency[source]) {
+            distances[source][target.first] = target.second;
+        }
+    }
+    
+    for (uint inter = 0; inter < _nodeCount; ++inter) {
+        for(uint source = 0 ; source < _nodeCount; ++source) {
+            for (uint target = 0; target < _nodeCount; ++target) {
+                int32 newDistance = distances[source][inter] + distances[inter][target];
+
+                // Keep the sum infinite, if that is the case
+                if(distances[source][inter] == INT32_MAX || distances[inter][target] == INT32_MAX) {
+                    newDistance = INT32_MAX;
+                }
+
+                if(newDistance < distances[source][target]) {
+                    distances[source][target] = newDistance;
+                }
+            }
+        }
+    }
+
     return distances;
 }
 
