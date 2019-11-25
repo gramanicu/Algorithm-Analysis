@@ -34,7 +34,6 @@ void GraphDriver::readData(std::istream& input) {
 
     graphDensity = 2.0 * double(edgeCount) /
                    (double(nodeCount) * (double(nodeCount) - 1.0f));
-    // std::cout << "Graph density " << graphDensity << "\n";
 
     if (graphDensity < DENSITY_THRESHOLD) {
         graph = new SmallGraph(nodeCount);
@@ -43,10 +42,8 @@ void GraphDriver::readData(std::istream& input) {
         graph = new FastGraph(nodeCount);
         std::cout << "Dense/Fast Graph\n";
     }
-    // graph = new FastGraph(nodeCount);
-    // graph = new SmallGraph(nodeCount);
 
-    for (uint i = 0 ; i < edgeCount ; ++i) {
+    for (uint i = 0; i < edgeCount; ++i) {
         uint source, target;
         int32 cost;
 
@@ -54,10 +51,8 @@ void GraphDriver::readData(std::istream& input) {
 
         // Because the input has nodes 1 -> N and the graph uses 0 -> N-1
         // the node id's are changed before they are added
-        graph->link(source-1, target-1, cost);
+        graph->link(source - 1, target - 1, cost);
     }
-
-    // std::cout << *graph << "\n";
 
     std::cout << graph->Dijkstra() << "\n";
     std::cout << graph->FloydWarshall() << "\n";
