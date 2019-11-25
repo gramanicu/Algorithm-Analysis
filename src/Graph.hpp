@@ -4,8 +4,8 @@
 
 #include <algorithm>
 #include <iostream>
-#include <vector>
 #include <queue>
+#include <vector>
 
 #define uint __UINT_FAST32_TYPE__
 #define int32 int_fast32_t
@@ -70,27 +70,21 @@ class Graph {
 
     /**
      * @brief Computes the shortest path cost using Dijkstra's algorithm
-     * @param source Source node ID
-     * @param target Target node ID
-     * @return The cost (int32)
+     * @return All the costs, in matrix form
      */
-    virtual int32 Dijkstra(const uint source, const uint target) const = 0;
+    virtual std::vector<std::vector<int32>> Dijkstra() const = 0;
 
     /**
      * @brief Computes the shortest path cost using the Floyd-Warshall algorithm
-     * @param source Source node ID
-     * @param target Target node ID
-     * @return The cost (int32)
+     * @return All the costs, in matrix form
      */
-    virtual int32 FloydWarshall(const uint source, const uint target) const = 0;
+    virtual std::vector<std::vector<int32>> FloydWarshall() const = 0;
 
     /**
      * @brief Computes the shortest path cost using Johnson's algorithm
-     * @param source Source node ID
-     * @param target Target node ID
-     * @return The cost (int32)
+     * @return All the costs, in matrix form
      */
-    virtual int32 Johnson(const uint source, const uint target) const = 0;
+    virtual std::vector<std::vector<int32>> Johnson() const = 0;
 
     // Operator overload to print the content of the graph
     friend std::ostream& operator<<(std::ostream& output, const Graph& g) {

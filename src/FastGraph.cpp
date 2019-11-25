@@ -37,58 +37,68 @@ int32 FastGraph::nodesCount() const { return _nodeCount; }
 
 std::vector<uint> FastGraph::neighbours(const uint source) const {
     std::vector<uint> neighbours;
-    
-    for (uint i = 0 ; i < _nodeCount ; ++i) {
-        if(adjency[source][i] != 0) {
+
+    for (uint i = 0; i < _nodeCount; ++i) {
+        if (adjency[source][i] != 0) {
             neighbours.push_back(i);
-        }   
+        }
     }
-    
+
     return neighbours;
 }
 
-int32 FastGraph::Dijkstra(const uint source, const uint target) const {
-    // Distance to the other nodes
-    std::vector<int32> distance = std::vector<int32>(_nodeCount, INT32_MAX);
-    distance[source] = 0;
+std::vector<std::vector<int32>> FastGraph::Dijkstra() const {
+    std::vector<std::vector<int32>> distances;
 
-    // Start from source
-    std::queue<uint> toVisit;
-    std::vector<bool> visited = std::vector<bool>(_nodeCount, false);
-    toVisit.push(source);
+    // Pick each node as a source for pathfinding
+    for (uint source = 0; source < _nodeCount; ++source) {
+        // Distance to the other nodes
+        std::vector<int32> distance = std::vector<int32>(_nodeCount, INT32_MAX);
+        distance[source] = 0;
 
-    while(!toVisit.empty()) {
-        uint cNode = toVisit.front();
+        // Start from source
+        std::queue<uint> toVisit;
+        std::vector<bool> visited = std::vector<bool>(_nodeCount, false);
+        toVisit.push(source);
 
-        // Add unvisited nodes to the graph & update distances
-        for(auto &neighbour : neighbours(cNode)) {
-            if(visited[neighbour] == false) {
-                toVisit.push(neighbour);
-                visited[neighbour] = true;
+        while (!toVisit.empty()) {
+            uint cNode = toVisit.front();
+
+            // Add unvisited nodes to the graph & update distances
+            for (auto &neighbour : neighbours(cNode)) {
+                if (visited[neighbour] == false) {
+                    toVisit.push(neighbour);
+                    visited[neighbour] = true;
+                }
+
+                // The distance from the current node to the neighbour
+                int32 currentDistance =
+                    distance[cNode] + adjency[cNode][neighbour];
+
+                // If the distance is shorter, update the distance
+                if (currentDistance < distance[neighbour]) {
+                    distance[neighbour] = currentDistance;
+                }
             }
 
-            // The distance from the current node to the neighbour
-            int32 currentDistance = distance[cNode] + adjency[cNode][neighbour];
-
-            // If the distance is shorter, update the distance            
-            if(currentDistance < distance[neighbour]) {
-                distance[neighbour] = currentDistance;
-            }
+            // The node was visited
+            toVisit.pop();
         }
 
-        // The node was visited
-        toVisit.pop();
+        distances.push_back(distance);
     }
 
-    return distance[target];
+    return distances;
 }
 
-int32 FastGraph::FloydWarshall(const uint source, const uint target) const {
-    return 0;
+std::vector<std::vector<int32>> FastGraph::FloydWarshall() const {
+    std::vector<std::vector<int32>> distances;
+    return distances;
 }
 
-int32 FastGraph::Johnson(const uint source, const uint target) const {
-    return 0;
+std::vector<std::vector<int32>> FastGraph::Johnson() const {
+    std::vector<std::vector<int32>> distances;
+    return distances;
 }
 
 void FastGraph::print(std::ostream &output) const {

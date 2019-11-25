@@ -26,7 +26,7 @@ class FastGraph : public Graph {
    private:
     std::vector<std::vector<int32>> adjency;
     uint _nodeCount;
-    
+
     /**
      * @brief Returns the neighbouring nodes of the source node
      * Only the nodes that can be reached starting from the source node
@@ -100,27 +100,21 @@ class FastGraph : public Graph {
 
     /**
      * @brief Computes the shortest path cost using Dijkstra's algorithm
-     * @param source Source node ID
-     * @param target Target node ID
-     * @return The cost (int32)
+     * @return All the costs, in matrix form
      */
-    int32 Dijkstra(const uint source, const uint target) const override;
+    std::vector<std::vector<int32>> Dijkstra() const override;
 
     /**
      * @brief Computes the shortest path cost using the Floyd-Warshall algorithm
-     * @param source Source node ID
-     * @param target Target node ID
-     * @return The cost (int32)
+     * @return All the costs, in matrix form
      */
-    int32 FloydWarshall(const uint source, const uint target) const override;
+    std::vector<std::vector<int32>> FloydWarshall() const override;
 
     /**
      * @brief Computes the shortest path cost using Johnson's algorithm
-     * @param source Source node ID
-     * @param target Target node ID
-     * @return The cost (int32)
+     * @return All the costs, in matrix form
      */
-    int32 Johnson(const uint source, const uint target) const override;
+    std::vector<std::vector<int32>> Johnson() const override;
 };
 
 #endif  // HEADERS_FASTGRAPH_HPP_
