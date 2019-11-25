@@ -1,6 +1,6 @@
 // Copyright 2019 Grama Nicolae
-#ifndef HEADERS_SMALLGRAPH_HPP_
-#define HEADERS_SMALLGRAPH_HPP_
+#ifndef SMALLGRAPH_HPP_
+#define SMALLGRAPH_HPP_
 
 #include <vector>
 #include "Graph.hpp"
@@ -110,4 +110,4 @@ class SmallGraph : public Graph {
     std::vector<std::vector<int32>> Johnson() const override;
 };
 
-#endif  // HEADERS_SMALLGRAPH_HPP_
+#endif  // SMALLGRAPH_HPP_

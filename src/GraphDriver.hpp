@@ -1,6 +1,6 @@
 // Copyright 2019 Grama Nicolae
-#ifndef HEADERS_GRAPHDRIVER_HPP_
-#define HEADERS_GRAPHDRIVER_HPP_
+#ifndef GRAPHDRIVER_HPP_
+#define GRAPHDRIVER_HPP_
 
 #include <iostream>
 #include <string>
@@ -25,4 +25,4 @@ class GraphDriver {
     static void readData(std::istream& input);
 };
 
-#endif  // HEADERS_GRAPHDRIVER_HPP_
+#endif  // GRAPHDRIVER_HPP_

@@ -1,6 +1,6 @@
 // Copyright 2019 Grama Nicolae
-#ifndef HEADERS_FASTGRAPH_HPP_
-#define HEADERS_FASTGRAPH_HPP_
+#ifndef FASTGRAPH_HPP_
+#define FASTGRAPH_HPP_
 
 #include "Graph.hpp"
 
@@ -117,4 +117,4 @@ class FastGraph : public Graph {
     std::vector<std::vector<int32>> Johnson() const override;
 };
 
-#endif  // HEADERS_FASTGRAPH_HPP_
+#endif  // FASTGRAPH_HPP_

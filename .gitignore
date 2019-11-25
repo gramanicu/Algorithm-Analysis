@@ -1,3 +1,6 @@
-Tester
-sources/*.o
+generator/Generator
+src/*.o
+generator/*.o
 .vscode*
+in/*
+ref/*

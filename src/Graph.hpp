@@ -1,6 +1,6 @@
 // Copyright 2019 Grama Nicolae
-#ifndef HEADERS_GRAPH_HPP_
-#define HEADERS_GRAPH_HPP_
+#ifndef GRAPH_HPP_
+#define GRAPH_HPP_
 
 #include <algorithm>
 #include <iostream>
@@ -93,4 +93,4 @@ class Graph {
     }
 };
 
-#endif  // HEADERS_GRAPH_HPP_
+#endif  // GRAPH_HPP_
