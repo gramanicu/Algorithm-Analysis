@@ -9,6 +9,8 @@ CFLAGS = -Wno-unused-parameter -Wall -Wextra -pedantic -g -O3 -std=c++14
 EXE = Generator
 SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
+INP = ../in/*
+REF = ../ref/*
 
 # Compiles the program
 build: $(OBJ)
@@ -29,9 +31,14 @@ run: clean build
 # Deletes the binary and object files
 clean:
 	rm -f $(EXE) $(OBJ)
-	rm -f ../in/*
-	rm -f ../ref/*
 	echo "Deleted the binary and object files"
+
+# Deletes the binary, object files and generated files
+cleanAll:
+	rm -f $(EXE) $(OBJ)
+	rm -f $(INP)
+	rm -f $(REF)
+	echo "Deleted the binary binaries, object files and generated files"
 
 # Automatic coding style, in my personal style
 beauty:

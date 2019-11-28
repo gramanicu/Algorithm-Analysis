@@ -58,9 +58,9 @@ generate.in
 ```
 
 Will generate 3 test "bulks" :
-1. 75 tests with all costs equal to 1, and will permit negative cycles (althought it's impossible to happen)
-2. 100 tests with costs between [`INT32_MIN`, `INT32_MAX - 1`],  (INT32_MAX is considered `infinity`), and will not permit negative cycles
-3. 25 tests with positive random values (not fully randomised), and will not permit negative cycles (they won't happen anyway)
+- 75 tests with all costs equal to 1, and will permit negative cycles (althought it's impossible to happen)
+- 100 tests with costs in the `INT32_MIN` -> `INT32_MAX - 1` interval,  (`INT32_MAX` is considered `infinity`), and will not permit negative cycles
+- 25 tests with positive random values (not fully randomised), and will not permit negative cycles (they won't happen anyway)
 
 ## Building solution - Floyd Warshall
 
@@ -73,8 +73,24 @@ This program uses a [library](https://github.com/gramanicu/EasyRand) I developed
 
 I preffered to use the .cpp and .h files directly, as importing the library and compiling it would have made the project structure too complex.
 
+## Makefile
+
+The essential commands included are:
+
+- `build` - compiles the code and generates the executable ("Generator")
+- `run` - compiles, then runs the binary
+- `clean` - deletes all binaries and object files
+- `cleanAll` - deletes all binaries, object files and generated files
+
+For development and testing purposes, the makefile includes some other commands:
+
+- `beauty` - beautifies the code, using the google standard
+- `memory` - runs valgrind on the code
+
+The makefile will hide some of the output and show custom messages (for example the "build" command)
+
 ## References
-1. GeeksForGeeks - [Detecting negative cycle using Floyd Warshall](https://www.geeksforgeeks.org/detecting-negative-cycle-using-floyd-warshall/)
+- GeeksForGeeks - [Detecting negative cycle using Floyd Warshall](https://www.geeksforgeeks.org/detecting-negative-cycle-using-floyd-warshall/)
 
 
 © 2019 Grama Nicolae, 322CA
