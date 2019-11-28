@@ -3,22 +3,8 @@
 
 #define DENSITY_THRESHOLD 1.5f
 
-std::ostream& operator<<(std::ostream& output,
-                         const std::vector<std::vector<int32>> matrix) {
-    for (auto& row : matrix) {
-        for (auto& elem : row) {
-            if (elem == INT32_MAX) {
-                output << "inf ";
-            } else {
-                output << elem << " ";
-            }
-        }
-        output << "\n";
-    }
-    return output;
-}
-
 Graph* GraphDriver::graph = nullptr;
+bool GraphDriver::hasNegatives = false;
 
 GraphDriver::GraphDriver() {}
 
@@ -37,10 +23,10 @@ void GraphDriver::readData(std::istream& input) {
 
     if (graphDensity < DENSITY_THRESHOLD) {
         graph = new SmallGraph(nodeCount);
-        std::cout << "Sparse/Small Graph\n";
+        // std::cout << "Sparse/Small Graph\n";
     } else {
         graph = new FastGraph(nodeCount);
-        std::cout << "Dense/Fast Graph\n";
+        // std::cout << "Dense/Fast Graph\n";
     }
 
     for (uint i = 0; i < edgeCount; ++i) {
@@ -49,12 +35,32 @@ void GraphDriver::readData(std::istream& input) {
 
         input >> source >> target >> cost;
 
+        if (cost < 0) {
+            hasNegatives = true;
+        }
+
         // Because the input has nodes 1 -> N and the graph uses 0 -> N-1
         // the node id's are changed before they are added
         graph->link(source - 1, target - 1, cost);
     }
+}
 
-    std::cout << graph->Dijkstra() << "\n";
-    std::cout << graph->FloydWarshall() << "\n";
-    std::cout << graph->Johnson() << "\n";
+std::vector<std::vector<int32>> GraphDriver::Dijkstra() {
+    return graph->Dijkstra();
+}
+
+std::vector<std::vector<int32>> GraphDriver::FloydWarshall() {
+    return graph->FloydWarshall();
+}
+
+std::vector<std::vector<int32>> GraphDriver::Johnson() {
+    return graph->Johnson();
+}
+
+std::vector<std::vector<int32>> GraphDriver::Best() {
+    if(!hasNegatives) {
+        return graph->Dijkstra();
+    }
+
+    return graph->Johnson();
 }

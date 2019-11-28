@@ -23,11 +23,11 @@ build: $(OBJ)
 
 # Executes the binary
 run: clean build
-	./$(EXE) < input.txt
+	./$(EXE) 2>/dev/null 
 
 # Deletes the binary and object files
 clean:
-	rm -f $(EXE) $(OBJ) Homework.zip
+	rm -f $(EXE) $(OBJ) ./out/*.out Homework.zip
 	echo "Deleted the binary and object files"
 
 # Automatic coding style, in my personal style
@@ -38,17 +38,18 @@ beauty:
 # Checks the memory for leaks
 MFLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes
 memory:clean build
-	valgrind $(MFLAGS) ./$(EXE) < input.txt
+	valgrind $(MFLAGS) ./$(EXE)
 
 # Adds and updates gitignore rules
 gitignore:
 	@echo "$(EXE)" > .gitignore ||:
-	@echo "generator/Generator" > .gitignore ||:
+	@echo "generator/Generator" >> .gitignore ||:
 	@echo "src/*.o" >> .gitignore ||:
 	@echo "generator/*.o" >> .gitignore ||:
 	@echo ".vscode*" >> .gitignore ||:	
 	@echo "in/*" >> .gitignore ||:	
 	@echo "ref/*" >> .gitignore ||:	
+	@echo "out/*" >> .gitignore ||:	
 	echo "Updated .gitignore"
 	
 # Creates an archive of the project

@@ -89,7 +89,8 @@ std::vector<Edge> Generator::build_test(const uint nodes, uint edges,
     }
 
     int tries = 0;
-    // Will build graphs untill no negative cycles are detected (if the option is active)
+    // Will build graphs untill no negative cycles are detected (if the option
+    // is active)
     do {
         std::vector<Edge> links;
 
@@ -149,9 +150,10 @@ std::vector<Edge> Generator::build_test(const uint nodes, uint edges,
         last_nodes = nodes;
         last_edges = edges;
         tries++;
-        
+
         has_negative_cycles = build_reference();
-    } while (has_negative_cycles && !negative_cycles && tries < MAX_CYCLE_TRIES);
+    } while (has_negative_cycles && !negative_cycles &&
+             tries < MAX_CYCLE_TRIES);
 
     return last_test;
 }
@@ -207,7 +209,7 @@ bool Generator::build_reference() {
  * When there are no negative cycles, MAX_NODES_POSITIVE is used instead
  * of MAX_NODES, as the graphs can be solved faster (and removes the chance
  * to generate negative cycles)
- * @param input 
+ * @param input
  */
 void Generator::generate(std::istream& input) {
     // Read the number of test types
@@ -222,10 +224,9 @@ void Generator::generate(std::istream& input) {
 
         input >> num_test >> negatives >> unity >> random >> ncycles;
 
-        
         // Try to get an even distribution of node counts for the tests
         int increase_nodes_by;
-        if(negatives) {
+        if (negatives) {
             increase_nodes_by = MAX_NODES / num_test;
         } else {
             increase_nodes_by = MAX_NODES_POSITIVE / num_test;
@@ -273,12 +274,13 @@ void Generator::generate(std::istream& input) {
             output.clear();
             filename.str(std::string(""));
 
-            // If the test shouldn't have negative cycles, but a graph without them
-            // couldn't be generated, log that to a file
-            if(has_negative_cycles && !ncycles) {
+            // If the test shouldn't have negative cycles, but a graph without
+            // them couldn't be generated, log that to a file
+            if (has_negative_cycles && !ncycles) {
                 nlogs << "Test " << testCount << " has negative cycles\n";
-            } else if(!has_negative_cycles && !ncycles) {
-                plogs << "Test " << testCount << " doesn't have negative cycles\n";
+            } else if (!has_negative_cycles && !ncycles) {
+                plogs << "Test " << testCount
+                      << " doesn't have negative cycles\n";
             }
 
             num_test--;

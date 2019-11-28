@@ -18,7 +18,6 @@
 #define MAX_NODES_POSITIVE 400
 #define MAX_CYCLE_TRIES 50
 
-
 class Edge {
    private:
     uint _source;

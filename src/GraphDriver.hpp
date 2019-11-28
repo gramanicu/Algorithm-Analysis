@@ -17,12 +17,17 @@ class GraphDriver {
    private:
     // Disabling constructor, copy and assignment
     static Graph* graph;
+    static bool hasNegatives;
 
    public:
     GraphDriver();
     ~GraphDriver();
 
     static void readData(std::istream& input);
+    static std::vector<std::vector<int32>> Dijkstra();
+    static std::vector<std::vector<int32>> FloydWarshall();
+    static std::vector<std::vector<int32>> Johnson();
+    static std::vector<std::vector<int32>> Best();
 };
 
 #endif  // GRAPHDRIVER_HPP_
