@@ -203,7 +203,7 @@ std::vector<std::vector<int32>> SmallGraph::Johnson() const {
         for (auto &edge : auxAdjency[source]) {
             if (weight[source] + edge.second < weight[edge.first]) {
                 // The graph contains negative cycles
-                std::cerr << "Graph contains negative cycles";
+                std::cerr << "Graph contains negative cycles\n";
 
                 // Return a valid response
                 return FloydWarshall();
