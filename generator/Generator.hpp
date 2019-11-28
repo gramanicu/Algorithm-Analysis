@@ -15,7 +15,7 @@
 #define uint __UINT_FAST32_TYPE__
 #define int32 int_fast32_t
 #define MAX_NODES 250
-#define MAX_NODES_POSITIVE 500
+#define MAX_NODES_POSITIVE 400
 #define MAX_CYCLE_TRIES 50
 
 

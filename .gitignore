@@ -2,5 +2,7 @@ generator/Generator
 src/*.o
 generator/*.o
 .vscode*
+in/*
+ref/*
 generator/negative.txt
 generator/positive.txt
