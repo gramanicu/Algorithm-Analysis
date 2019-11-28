@@ -15,6 +15,9 @@
 #define uint __UINT_FAST32_TYPE__
 #define int32 int_fast32_t
 #define MAX_NODES 250
+#define MAX_NODES_POSITIVE 500
+#define MAX_CYCLE_TRIES 50
+
 
 class Edge {
    private:
@@ -44,11 +47,13 @@ class Generator {
     Generator() = delete;
 
     static std::vector<Edge> last_test;
+    static std::vector<std::vector<int32>> last_solution;
 
     static bool is_duplicate(const uint source, const uint target,
                              const std::vector<Edge> links);
     static uint last_nodes;
     static uint last_edges;
+    static bool has_negative_cycles;
 
     /**
      * @brief Generates a graph that will be tested
@@ -57,14 +62,23 @@ class Generator {
      * @param has_negative Whether the graph has negative costs
      * @param only_unit Whether the graph has only costs = 1
      * @param fully_random Whether the graph has purely random costs
+     * @param negative_cycles Whether or not the graph will have
+     * negative cycles (note - it isn't guaranteed possible)
      * @return std::vector<Edge> A vector with the edges of the graph
      */
     static std::vector<Edge> build_test(const uint nodes, uint edges,
                                         const bool has_negative,
                                         const bool only_unit,
-                                        const bool fully_random);
+                                        const bool fully_random,
+                                        const bool negative_cycles);
 
-    static std::vector<std::vector<int32>> build_reference();
+    /**
+     * @brief Builds the reference (solution)
+     * Will return if the graph contains negative cycles
+     * @return true Has negative cycles
+     * @return false Doesn't have negative cycles
+     */
+    static bool build_reference();
 
    public:
     static void generate(std::istream& input);
