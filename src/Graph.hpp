@@ -10,6 +10,8 @@
 #define uint __UINT_FAST32_TYPE__
 #define int32 int_fast32_t
 
+typedef std::pair<int, int> edge;
+
 /**
  * @brief An abstract class, defining a general graph
  * As there are mainly 2 implementations of a graph (adjency matrix and adjency

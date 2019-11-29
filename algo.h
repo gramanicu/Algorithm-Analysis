@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#define int32 int_fast32_t
+
 typedef std::pair<int, int> edge;
 
 /**
@@ -12,6 +14,20 @@ typedef std::pair<int, int> edge;
  * @returns: The adjacency matrix with the minimum distances between every node. If there is no way
  *           reach node j from i, store -1 in the matrix. (print it as "inf" in the tests)
  */
-std::vector<std::vector<int>> shortest_path_all(const std::vector<std::vector<edge>>& graph);
+std::vector<std::vector<int32>> shortest_path_all(const std::vector<std::vector<edge>>& graph);
 
+std::ostream& operator<<(std::ostream& output,
+                         const std::vector<std::vector<int32>> matrix) {
+    for (auto& row : matrix) {
+        for (auto& elem : row) {
+            if (elem == INT32_MAX) {
+                output << "inf ";
+            } else {
+                output << elem << " ";
+            }
+        }
+        output << "\n";
+    }
+    return output;
+}
 #endif

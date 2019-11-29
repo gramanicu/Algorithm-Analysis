@@ -17,7 +17,7 @@
 #define int32 int_fast32_t
 #define MAX_NODES 250
 #define MAX_NODES_POSITIVE 400
-#define MAX_NODES_BIG 10000
+#define MAX_NODES_BIG 100000
 #define MAX_CYCLE_TRIES 50
 #define MAX_VERTICES 1000000
 

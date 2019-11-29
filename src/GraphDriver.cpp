@@ -50,6 +50,26 @@ void GraphDriver::readData(std::istream& input) {
     }
 }
 
+
+void GraphDriver::setData(const std::vector<std::vector<edge>>& othergraph) {
+    graph = new SmallGraph(othergraph.size());
+
+    lastNodes = othergraph.size();
+    lastEdges = 0;
+    for(int i = 0 ; i < lastNodes ; ++i) {
+
+        lastEdges += othergraph[i].size();
+
+        for(auto& edge : othergraph[i]) {
+            if(edge.second < 0) {
+                hasNegatives = true;
+            }
+
+            graph->link(i, edge.first, edge.second);
+        }
+    }
+}
+
 std::vector<std::vector<int32>> GraphDriver::Dijkstra() {
     return graph->Dijkstra();
 }

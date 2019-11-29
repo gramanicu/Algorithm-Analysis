@@ -55,6 +55,7 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
                                               const bool negative_cycles) {
     using namespace EasyRand;
 
+    std::cout << "Large test\n";
     if (edges > nodes * (nodes - 1) / 2) {
         edges = nodes * (nodes - 1) / 2;
     }
@@ -67,35 +68,19 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
 
     // Apply the "settings"
     if (only_unit) {
-        if (has_negative) {
-            min_cost = -1;
-        } else {
-            min_cost = 1;
-        }
+        min_cost = 1;
         max_cost = 1;
     } else {
         if (fully_random) {
-            if (has_negative) {
-                min_cost = INT32_MIN;
-            } else {
-                min_cost = 1;
-            }
+            min_cost = 1;
             max_cost = INT32_MAX - 1;
         } else {
             int max = (nodes > edges) ? nodes : edges;
-            if (has_negative) {
-                min_cost = -max;
-            } else {
-                min_cost = 1;
-            }
+            min_cost = 1;
             max_cost = max;
         }
     }
 
-    int tries = 0;
-    // Will build graphs untill no negative cycles are detected (if the option
-    // is active)
-    do {
         std::vector<Edge> links;
         std::vector<int32> last_edge_from_node = std::vector<int32>(nodes, -1);
 
@@ -105,9 +90,7 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
 
         // If we have more edges than nodes, we can give an edge to each node
         while (step < 1) {
-            std::cout << (double(edges) - double(remaining)) / double(edges) *
-                             100.0f
-                      << "%\n";
+            std::cout << remaining << "\n";
             for (uint index = 0; index < nodes; ++index) {
                 // Generate a link that doesn't exist already
                 uint target;
@@ -131,6 +114,7 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
 
         // Distribute the remaining edges
         while (remaining) {
+            std::cout << remaining << "\n";
             uint source = current_step;
 
             // Generate a link that doesn't exist already
@@ -159,16 +143,9 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
         last_test = std::move(links);
         last_nodes = nodes;
         last_edges = edges;
-        tries++;
 
-        if(!has_negative) {
-            has_negative_cycles = false;
-            build_reference_positive();
-        } else {
-            has_negative_cycles = build_reference();
-        }
-    } while (has_negative_cycles && !negative_cycles &&
-             tries < MAX_CYCLE_TRIES);
+        has_negative_cycles = false;
+        build_reference_positive();
 
     return last_test;
 }
