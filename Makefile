@@ -57,4 +57,4 @@ gitignore:
 	
 # Creates an archive of the project
 pack: clean
-	zip -FSr Homework.zip *
+	zip -FSr Homework.zip algo.h algo.cpp ./generator ./src ./in ./out Makefile Readme.md
