@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -16,7 +17,7 @@
 #define int32 int_fast32_t
 #define MAX_NODES 250
 #define MAX_NODES_POSITIVE 400
-#define MAX_NODES_BIG 100000
+#define MAX_NODES_BIG 10000
 #define MAX_CYCLE_TRIES 50
 #define MAX_VERTICES 1000000
 
@@ -57,6 +58,14 @@ class Generator {
     static bool has_negative_cycles;
 
     /**
+     * @brief Returns the neighbouring nodes of the source node
+     * Only the nodes that can be reached starting from the source node
+     * @param source The starting node
+     * @return std::vector<uint> The list of neighbours
+     */
+    static std::vector<std::pair<uint, int32>> neighbours(const uint source);
+
+    /**
      * @brief Generates a graph that will be tested
      * @param nodes The number of nodes/vertices of the graph
      * @param edges The number of edges of the graph
@@ -90,6 +99,13 @@ class Generator {
      * @return false Doesn't have negative cycles
      */
     static bool build_reference();
+
+    /**
+     * @brief Builds the reference (solution)
+     * This is used for large graphs (>1000 nodes), but it must
+     * be guaranteed that it doesn't contain negative cycles
+     */
+    static void build_reference_positive();
 
    public:
     static void generate(std::istream& input);

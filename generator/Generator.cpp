@@ -58,11 +58,10 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
     if (edges > nodes * (nodes - 1) / 2) {
         edges = nodes * (nodes - 1) / 2;
     }
-    
+
     if (edges > MAX_VERTICES) {
         edges = MAX_VERTICES;
     }
-
 
     int32 min_cost, max_cost;
 
@@ -106,7 +105,9 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
 
         // If we have more edges than nodes, we can give an edge to each node
         while (step < 1) {
-            std::cout << (double(edges) - double(remaining))/double(edges) * 100.0f << "%\n";
+            std::cout << (double(edges) - double(remaining)) / double(edges) *
+                             100.0f
+                      << "%\n";
             for (uint index = 0; index < nodes; ++index) {
                 // Generate a link that doesn't exist already
                 uint target;
@@ -160,7 +161,12 @@ std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
         last_edges = edges;
         tries++;
 
-        has_negative_cycles = build_reference();
+        if(!has_negative) {
+            has_negative_cycles = false;
+            build_reference_positive();
+        } else {
+            has_negative_cycles = build_reference();
+        }
     } while (has_negative_cycles && !negative_cycles &&
              tries < MAX_CYCLE_TRIES);
 
@@ -177,11 +183,10 @@ std::vector<Edge> Generator::build_test(const uint nodes, uint edges,
     if (edges > nodes * (nodes - 1) / 2) {
         edges = nodes * (nodes - 1) / 2;
     }
-    
+
     if (edges > MAX_VERTICES) {
         edges = MAX_VERTICES;
     }
-
 
     int32 min_cost, max_cost;
 
@@ -275,7 +280,12 @@ std::vector<Edge> Generator::build_test(const uint nodes, uint edges,
         last_edges = edges;
         tries++;
 
-        has_negative_cycles = build_reference();
+        if(!has_negative) {
+            has_negative_cycles = false;
+            build_reference_positive();
+        } else {
+            has_negative_cycles = build_reference();
+        }
     } while (has_negative_cycles && !negative_cycles &&
              tries < MAX_CYCLE_TRIES);
 
@@ -323,6 +333,62 @@ bool Generator::build_reference() {
         }
     }
     return false;
+}
+
+std::vector<std::pair<uint, int32>> Generator::neighbours(
+    const uint source) {
+    std::vector<std::pair<uint, int32>> neighbours;
+
+    for (auto& link : last_test) {
+        if(link.getSource() == source) {
+            neighbours.push_back(std::make_pair(link.getTarget(), link.getCost()));
+        }
+    }
+
+    return neighbours;
+}
+
+void Generator::build_reference_positive() {
+    std::vector<std::vector<int32>> distances;
+
+    // Pick each node as a source for pathfinding
+    for (uint source = 0; source < last_nodes; ++source) {
+        // Distance to the other nodes
+        std::vector<int32> distance = std::vector<int32>(last_nodes, INT32_MAX);
+        distance[source] = 0;
+
+        // Start from source
+        std::queue<uint> toVisit;
+        std::vector<bool> visited = std::vector<bool>(last_nodes, false);
+        toVisit.push(source);
+
+        while (!toVisit.empty()) {
+            uint cNode = toVisit.front();
+
+            // Add unvisited nodes to the graph & update distances
+            for (auto& neighbour : neighbours(cNode)) {
+                if (visited[neighbour.first] == false) {
+                    toVisit.push(neighbour.first);
+                    visited[neighbour.first] = true;
+                }
+
+                // The distance from the current node to the neighbour
+                int32 currentDistance = distance[cNode] + neighbour.second;
+
+                // If the distance is shorter, update the distance
+                if (currentDistance < distance[neighbour.first]) {
+                    distance[neighbour.first] = currentDistance;
+                }
+            }
+
+            // The node was visited
+            toVisit.pop();
+        }
+
+        distances.push_back(distance);
+    }
+
+    last_solution = distances;
 }
 
 /**
@@ -379,7 +445,6 @@ void Generator::generate(std::istream& input) {
                                       ncycles);
             }
 
-            
             std::cout << nodes << " " << edges << "\n";
 
             // Move generated data to input folder
