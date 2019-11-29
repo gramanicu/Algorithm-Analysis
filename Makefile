@@ -50,6 +50,7 @@ gitignore:
 	@echo "in/*" >> .gitignore ||:	
 	@echo "ref/*" >> .gitignore ||:	
 	@echo "out/*" >> .gitignore ||:	
+	@echo "other_tests/*" >> .gitignore ||:
 	echo "Updated .gitignore"
 	
 # Creates an archive of the project

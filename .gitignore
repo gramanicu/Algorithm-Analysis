@@ -6,3 +6,4 @@ generator/*.o
 in/*
 ref/*
 out/*
+other_tests/*
