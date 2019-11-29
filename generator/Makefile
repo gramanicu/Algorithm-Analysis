@@ -24,8 +24,6 @@ build: $(OBJ)
 
 # Executes the binary
 run: clean build
-	rm -f ../in/*
-	rm -f ../ref/*
 	./$(EXE)
 
 # Deletes the binary and object files

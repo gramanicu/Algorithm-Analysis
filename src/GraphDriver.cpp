@@ -5,6 +5,8 @@
 
 Graph* GraphDriver::graph = nullptr;
 bool GraphDriver::hasNegatives = false;
+int GraphDriver::lastEdges = 0;
+int GraphDriver::lastNodes = 0;
 
 GraphDriver::GraphDriver() {}
 
@@ -28,6 +30,9 @@ void GraphDriver::readData(std::istream& input) {
         graph = new FastGraph(nodeCount);
         // std::cout << "Dense/Fast Graph\n";
     }
+
+    lastEdges = edgeCount;
+    lastNodes = nodeCount;
 
     for (uint i = 0; i < edgeCount; ++i) {
         uint source, target;
@@ -58,7 +63,7 @@ std::vector<std::vector<int32>> GraphDriver::Johnson() {
 }
 
 std::vector<std::vector<int32>> GraphDriver::Best() {
-    if(!hasNegatives) {
+    if (!hasNegatives) {
         return graph->Dijkstra();
     }
 

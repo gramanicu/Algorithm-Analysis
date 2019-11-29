@@ -23,6 +23,9 @@ class GraphDriver {
     GraphDriver();
     ~GraphDriver();
 
+    static int lastNodes;
+    static int lastEdges;
+
     static void readData(std::istream& input);
     static std::vector<std::vector<int32>> Dijkstra();
     static std::vector<std::vector<int32>> FloydWarshall();
