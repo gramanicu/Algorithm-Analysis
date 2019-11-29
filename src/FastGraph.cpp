@@ -192,7 +192,7 @@ std::vector<std::vector<int32>> FastGraph::Johnson() const {
         for (auto &edge : auxAdjency[source]) {
             if (weight[source] + edge.second < weight[edge.first]) {
                 // The graph contains negative cycles
-                std::cerr << "Graph contains negative cycles";
+                // std::cerr << "Graph contains negative cycles";
 
                 // Return a valid response
                 return FloydWarshall();

@@ -11,13 +11,12 @@
 #include <vector>
 #include "EasyRand.h"
 
-#define INPUTS_FOLDER "../other_tests/in/"
-#define REFERENCE_FOLDER "../other_tests/ref/"
+#define INPUTS_FOLDER "../in/"
+#define REFERENCE_FOLDER "../ref/"
 #define uint __UINT_FAST32_TYPE__
 #define int32 int_fast32_t
 #define MAX_NODES 250
-#define MAX_NODES_POSITIVE 400
-#define MAX_NODES_BIG 100000
+#define MAX_NODES_POSITIVE 500
 #define MAX_CYCLE_TRIES 50
 #define MAX_VERTICES 1000000
 
@@ -83,29 +82,12 @@ class Generator {
                                         const bool negative_cycles);
 
     /**
-     * @brief Similar to the other test generator, but it is faster for large
-     * graphs
-     */
-    static std::vector<Edge> build_large_test(const uint nodes, uint edges,
-                                              const bool has_negative,
-                                              const bool only_unit,
-                                              const bool fully_random,
-                                              const bool negative_cycles);
-
-    /**
      * @brief Builds the reference (solution)
      * Will return if the graph contains negative cycles
      * @return true Has negative cycles
      * @return false Doesn't have negative cycles
      */
     static bool build_reference();
-
-    /**
-     * @brief Builds the reference (solution)
-     * This is used for large graphs (>1000 nodes), but it must
-     * be guaranteed that it doesn't contain negative cycles
-     */
-    static void build_reference_positive();
 
    public:
     static void generate(std::istream& input);

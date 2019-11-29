@@ -6,16 +6,12 @@
 # Compilation variables
 CC = g++
 CFLAGS = -Wno-unused-parameter -Wall -Wextra -pedantic -g -O3 -std=c++14
-EXE = algo_test
+EXE = Tester
 SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
-# Compiles the object files
-build: algo.o src/FastGraph.o src/SmallGraph.o src/GraphDriver.o
-	$(info Compilation successfull)
-
 # Compiles the program
-build_test: algo_test.o algo.o src/FastGraph.o src/SmallGraph.o src/GraphDriver.o
+build: $(OBJ)
 	$(info Compiling code...)
 	@$(CC) -o $(EXE) $^ $(CFLAGS) ||:
 	$(info Compilation successfull)
@@ -27,11 +23,11 @@ build_test: algo_test.o algo.o src/FastGraph.o src/SmallGraph.o src/GraphDriver.
 
 # Executes the binary
 run: clean build
-	./$(EXE)
+	./$(EXE) 2>/dev/null 
 
 # Deletes the binary and object files
 clean:
-	rm -f $(EXE) $(OBJ) ./src/*.o ./out/*.out Homework.zip
+	rm -f $(EXE) $(OBJ) ../out/*.out Homework.zip
 	echo "Deleted the binary and object files"
 
 # Automatic coding style, in my personal style
@@ -44,17 +40,3 @@ MFLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes
 memory:clean build
 	valgrind $(MFLAGS) ./$(EXE)
 
-# Adds and updates gitignore rules
-gitignore:
-	@echo "$(EXE)" > .gitignore ||:
-	@echo "generator/Generator" >> .gitignore ||:
-	@echo "src/*.o" >> .gitignore ||:
-	@echo "generator/*.o" >> .gitignore ||:
-	@echo ".vscode*" >> .gitignore ||:	
-	@echo "out/*" >> .gitignore ||:	
-	@echo "other_tests/*" >> .gitignore ||:
-	echo "Updated .gitignore"
-	
-# Creates an archive of the project
-pack: clean
-	zip -FSr Homework.zip *

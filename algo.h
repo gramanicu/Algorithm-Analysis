@@ -2,6 +2,7 @@
 #define ALGO_H
 
 #include <vector>
+#include <stdint.h>
 
 #define int32 int_fast32_t
 
@@ -16,18 +17,4 @@ typedef std::pair<int, int> edge;
  */
 std::vector<std::vector<int32>> shortest_path_all(const std::vector<std::vector<edge>>& graph);
 
-std::ostream& operator<<(std::ostream& output,
-                         const std::vector<std::vector<int32>> matrix) {
-    for (auto& row : matrix) {
-        for (auto& elem : row) {
-            if (elem == INT32_MAX) {
-                output << "inf ";
-            } else {
-                output << elem << " ";
-            }
-        }
-        output << "\n";
-    }
-    return output;
-}
 #endif

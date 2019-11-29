@@ -1,9 +1,7 @@
-Tester
+algo_test
 generator/Generator
 src/*.o
 generator/*.o
 .vscode*
-in/*
-ref/*
 out/*
 other_tests/*

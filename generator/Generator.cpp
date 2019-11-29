@@ -48,108 +48,6 @@ bool Generator::is_duplicate(const uint source, const uint target,
     return false;
 }
 
-std::vector<Edge> Generator::build_large_test(const uint nodes, uint edges,
-                                              const bool has_negative,
-                                              const bool only_unit,
-                                              const bool fully_random,
-                                              const bool negative_cycles) {
-    using namespace EasyRand;
-
-    std::cout << "Large test\n";
-    if (edges > nodes * (nodes - 1) / 2) {
-        edges = nodes * (nodes - 1) / 2;
-    }
-
-    if (edges > MAX_VERTICES) {
-        edges = MAX_VERTICES;
-    }
-
-    int32 min_cost, max_cost;
-
-    // Apply the "settings"
-    if (only_unit) {
-        min_cost = 1;
-        max_cost = 1;
-    } else {
-        if (fully_random) {
-            min_cost = 1;
-            max_cost = INT32_MAX - 1;
-        } else {
-            int max = (nodes > edges) ? nodes : edges;
-            min_cost = 1;
-            max_cost = max;
-        }
-    }
-
-        std::vector<Edge> links;
-        std::vector<int32> last_edge_from_node = std::vector<int32>(nodes, -1);
-
-        double current_step = 0.0f;
-        double step = double(nodes) / double(edges);
-        uint remaining = edges;
-
-        // If we have more edges than nodes, we can give an edge to each node
-        while (step < 1) {
-            std::cout << remaining << "\n";
-            for (uint index = 0; index < nodes; ++index) {
-                // Generate a link that doesn't exist already
-                uint target;
-                do {
-                    target = last_edge_from_node.at(index) + 1;
-                    last_edge_from_node.at(index) = target;
-                } while (is_duplicate(index, target, links));
-
-                // Make sure there isn't a link with 0 cost
-                int32 cost;
-                do {
-                    cost = Random::randInt(min_cost, max_cost);
-                } while (cost == 0);
-
-                // Add the link to the list
-                links.push_back(Edge(index, target, cost));
-            }
-            remaining -= nodes;
-            step = double(nodes) / remaining;
-        }
-
-        // Distribute the remaining edges
-        while (remaining) {
-            std::cout << remaining << "\n";
-            uint source = current_step;
-
-            // Generate a link that doesn't exist already
-            uint target;
-            do {
-                target = last_edge_from_node.at(source) + 1;
-                last_edge_from_node.at(source) = target;
-            } while (is_duplicate(source, target, links));
-
-            // Make sure there isn't a link with 0 cost
-            int32 cost;
-            do {
-                cost = Random::randInt(min_cost, max_cost);
-            } while (cost == 0);
-
-            links.push_back(Edge(source, target, cost));
-            current_step += step;
-            remaining--;
-        }
-
-        // Sort the links (to look good)
-        std::sort(links.begin(), links.end(), [](const Edge& a, const Edge& b) {
-            return a.getSource() < b.getSource();
-        });
-
-        last_test = std::move(links);
-        last_nodes = nodes;
-        last_edges = edges;
-
-        has_negative_cycles = false;
-        build_reference_positive();
-
-    return last_test;
-}
-
 std::vector<Edge> Generator::build_test(const uint nodes, uint edges,
                                         const bool has_negative,
                                         const bool only_unit,
@@ -257,12 +155,8 @@ std::vector<Edge> Generator::build_test(const uint nodes, uint edges,
         last_edges = edges;
         tries++;
 
-        if(!has_negative) {
-            has_negative_cycles = false;
-            build_reference_positive();
-        } else {
-            has_negative_cycles = build_reference();
-        }
+        // has_negative_cycles = build_reference();
+        has_negative_cycles = false;
     } while (has_negative_cycles && !negative_cycles &&
              tries < MAX_CYCLE_TRIES);
 
@@ -324,50 +218,6 @@ std::vector<std::pair<uint, int32>> Generator::neighbours(
 
     return neighbours;
 }
-
-void Generator::build_reference_positive() {
-    std::vector<std::vector<int32>> distances;
-
-    // Pick each node as a source for pathfinding
-    for (uint source = 0; source < last_nodes; ++source) {
-        // Distance to the other nodes
-        std::vector<int32> distance = std::vector<int32>(last_nodes, INT32_MAX);
-        distance[source] = 0;
-
-        // Start from source
-        std::queue<uint> toVisit;
-        std::vector<bool> visited = std::vector<bool>(last_nodes, false);
-        toVisit.push(source);
-
-        while (!toVisit.empty()) {
-            uint cNode = toVisit.front();
-
-            // Add unvisited nodes to the graph & update distances
-            for (auto& neighbour : neighbours(cNode)) {
-                if (visited[neighbour.first] == false) {
-                    toVisit.push(neighbour.first);
-                    visited[neighbour.first] = true;
-                }
-
-                // The distance from the current node to the neighbour
-                int32 currentDistance = distance[cNode] + neighbour.second;
-
-                // If the distance is shorter, update the distance
-                if (currentDistance < distance[neighbour.first]) {
-                    distance[neighbour.first] = currentDistance;
-                }
-            }
-
-            // The node was visited
-            toVisit.pop();
-        }
-
-        distances.push_back(distance);
-    }
-
-    last_solution = distances;
-}
-
 /**
  * @brief Will generate the tests specified in the input
  * The test will have an increasing number of nodes, from MAX_NODES/test_count
@@ -393,7 +243,11 @@ void Generator::generate(std::istream& input) {
 
         // Try to get an even distribution of node counts for the tests
         int increase_nodes_by;
-        increase_nodes_by = MAX_NODES_BIG / num_test;
+        if (negatives) {
+            increase_nodes_by = MAX_NODES / num_test;
+        } else {
+            increase_nodes_by = MAX_NODES_POSITIVE / num_test;
+        }
         nodes = increase_nodes_by;
 
         std::ofstream nlogs, plogs;
@@ -406,23 +260,8 @@ void Generator::generate(std::istream& input) {
                 EasyRand::Random::randInt(nodes / 2, nodes * (nodes - 1) / 2);
 
             // Build the test
-            if (negatives) {
-                if (nodes > MAX_NODES) {
-                    Generator::build_large_test(nodes, edges, negatives, unity,
-                                                random, ncycles);
-                } else {
-                    Generator::build_test(nodes, edges, negatives, unity,
-                                          random, ncycles);
-                }
-            } else if (nodes > MAX_NODES_POSITIVE) {
-                Generator::build_large_test(nodes, edges, negatives, unity,
-                                            random, ncycles);
-            } else {
-                Generator::build_test(nodes, edges, negatives, unity, random,
-                                      ncycles);
-            }
-
-            std::cout << nodes << " " << edges << "\n";
+            Generator::build_test(nodes, edges, negatives, unity, random,
+                                  ncycles);
 
             // Move generated data to input folder
             std::stringstream filename;
@@ -442,24 +281,24 @@ void Generator::generate(std::istream& input) {
             filename.str(std::string(""));
 
             // Move generated to to reference folder
-            filename << REFERENCE_FOLDER << "test" << std::to_string(testCount)
-                     << ".ref";
-            output.open(filename.str());
-            std::cout << filename.str() << "\n";
-            output << last_solution;
+            // filename << REFERENCE_FOLDER << "test" << std::to_string(testCount)
+            //          << ".out";
+            // output.open(filename.str());
+            // std::cout << filename.str() << "\n";
+            // output << last_solution;
 
-            output.close();
-            output.clear();
-            filename.str(std::string(""));
+            // output.close();
+            // output.clear();
+            // filename.str(std::string(""));
 
-            // If the test shouldn't have negative cycles, but a graph without
-            // them couldn't be generated, log that to a file
-            if (has_negative_cycles && !ncycles) {
-                nlogs << "Test " << testCount << " has negative cycles\n";
-            } else if (!has_negative_cycles && !ncycles) {
-                plogs << "Test " << testCount
-                      << " doesn't have negative cycles\n";
-            }
+            // // If the test shouldn't have negative cycles, but a graph without
+            // // them couldn't be generated, log that to a file
+            // if (has_negative_cycles && !ncycles) {
+            //     nlogs << "Test " << testCount << " has negative cycles\n";
+            // } else if (!has_negative_cycles && !ncycles) {
+            //     plogs << "Test " << testCount
+            //           << " doesn't have negative cycles\n";
+            // }
 
             num_test--;
             testCount++;

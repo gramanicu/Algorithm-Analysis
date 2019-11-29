@@ -57,7 +57,6 @@ void GraphDriver::setData(const std::vector<std::vector<edge>>& othergraph) {
     lastNodes = othergraph.size();
     lastEdges = 0;
     for(int i = 0 ; i < lastNodes ; ++i) {
-
         lastEdges += othergraph[i].size();
 
         for(auto& edge : othergraph[i]) {
@@ -65,7 +64,7 @@ void GraphDriver::setData(const std::vector<std::vector<edge>>& othergraph) {
                 hasNegatives = true;
             }
 
-            graph->link(i, edge.first, edge.second);
+            graph->link(i, edge.first - 1, edge.second);
         }
     }
 }
