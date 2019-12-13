@@ -1,1 +1,0 @@
-Test 9 doesn't have negative cycles

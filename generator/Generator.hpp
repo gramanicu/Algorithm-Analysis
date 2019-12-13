@@ -1,96 +1,140 @@
-// Copyright 2019 Grama Nicolae
+// Copyright Grama Nicolae 2019
 #ifndef GENERATOR_HPP_
 #define GENERATOR_HPP_
 
-#include <algorithm>
+#include <math.h>
 #include <fstream>
 #include <iostream>
-#include <queue>
 #include <sstream>
-#include <string>
+#include <thread>
 #include <vector>
 #include "EasyRand.h"
 
+#define MIN_DISTANCE 1
+#define MAX_DISTANCE 1
+#define NUM_OF_TESTS 50
+#define MAX_NODE_COUNT 10000
+#define MAX_EDGE_COUNT 100000
 #define INPUTS_FOLDER "../in/"
-#define REFERENCE_FOLDER "../ref/"
-#define uint __UINT_FAST32_TYPE__
-#define int32 int_fast32_t
-#define MAX_NODES 250
-#define MAX_NODES_POSITIVE 500
-#define MAX_CYCLE_TRIES 50
-#define MAX_VERTICES 1000000
 
 class Edge {
-   private:
-    uint _source;
-    uint _target;
-    int32 _cost;
-
    public:
-    Edge() : _source(0), _target(0), _cost(0){};
-    Edge(const uint source, const uint target, const int32 cost)
-        : _source(source), _target(target), _cost(cost){};
+    int source;
+    int destination;
+    int distance;
 
-    uint getSource() const { return _source; }
-    uint getTarget() const { return _target; }
-    int32 getCost() const { return _cost; }
+    Edge();
+    Edge(int source, int destination, int distance)
+        : source(source), destination(destination), distance(distance){};
 
-    // Source and target +1 to respect the "external" node names
-    friend std::ostream& operator<<(std::ostream& output, const Edge& e) {
-        output << e._source + 1 << " " << e._target + 1 << " " << e._cost
-               << "\n";
-        return output;
+    friend std::ostream& operator<<(std::ostream& output, const Edge edge) {
+        output << edge.source + 1 << " " << edge.destination + 1 << " " << edge.distance;
+    return output;
     }
+
+        
 };
 
 class Generator {
    private:
-    Generator() = delete;
+    int thread_count;
+    static std::vector<std::vector<Edge>> threaded_graph;
+    int current_test;
 
-    static std::vector<Edge> last_test;
-    static std::vector<std::vector<int32>> last_solution;
+    /*
+        As this function will be run on multiple threads, we want to
+        generate only a part of the graph. So, we need to specify
+        the starting node, starting edge and edges count
+    */
+    static void generateGraph(int nodeI, int edgeI, int edges_count,
+                              int total_nodes, const int threadI) {
+        int cNode = nodeI;
+        std::vector<Edge> graph;
+        int current_dest = edgeI;
 
-    static bool is_duplicate(const uint source, const uint target,
-                             const std::vector<Edge> links);
-    static uint last_nodes;
-    static uint last_edges;
-    static bool has_negative_cycles;
-
-    /**
-     * @brief Returns the neighbouring nodes of the source node
-     * Only the nodes that can be reached starting from the source node
-     * @param source The starting node
-     * @return std::vector<uint> The list of neighbours
-     */
-    static std::vector<std::pair<uint, int32>> neighbours(const uint source);
-
-    /**
-     * @brief Generates a graph that will be tested
-     * @param nodes The number of nodes/vertices of the graph
-     * @param edges The number of edges of the graph
-     * @param has_negative Whether the graph has negative costs
-     * @param only_unit Whether the graph has only costs = 1
-     * @param fully_random Whether the graph has purely random costs
-     * @param negative_cycles Whether or not the graph will have
-     * negative cycles (note - it isn't guaranteed possible)
-     * @return std::vector<Edge> A vector with the edges of the graph
-     */
-    static std::vector<Edge> build_test(const uint nodes, uint edges,
-                                        const bool has_negative,
-                                        const bool only_unit,
-                                        const bool fully_random,
-                                        const bool negative_cycles);
-
-    /**
-     * @brief Builds the reference (solution)
-     * Will return if the graph contains negative cycles
-     * @return true Has negative cycles
-     * @return false Doesn't have negative cycles
-     */
-    static bool build_reference();
+        while (edges_count > 0) {
+            while (current_dest != total_nodes) {
+                if (current_dest != cNode) {
+                    int distance = EasyRand::Random::randInt(MIN_DISTANCE, MAX_DISTANCE);
+                    graph.push_back(Edge(cNode, current_dest, distance));
+                    edges_count--;
+                }
+                current_dest++;
+            }
+            cNode++;
+            current_dest = 0;
+        }
+        threaded_graph[threadI] = graph;
+    }
 
    public:
-    static void generate(std::istream& input);
+    Generator() { 
+        current_test = 0; 
+        thread_count = std::thread::hardware_concurrency();
+        if (thread_count <= 0) {
+            thread_count = 1;
+        }
+    }
+
+    void generateTests(int num_of_tests) {
+        std::ofstream output;
+        int nodeRate = MAX_NODE_COUNT / num_of_tests;
+        int current_nodes = nodeRate;
+
+        // For each test
+        while (current_test != num_of_tests) {
+            int test_nodes = current_nodes;
+            int thread_node_index = 0;
+            int test_edge = std::min(MAX_EDGE_COUNT, int(std::pow(test_nodes, 2)));
+            int thread_edge_count = test_edge/thread_count;
+            int thread_edge_index = 0;
+
+            std::vector<std::thread> threads;
+            threaded_graph = std::vector<std::vector<Edge>>(thread_count);
+
+            for (int i = 0; i < thread_count; ++i) {
+                if (i == thread_count - 1) {
+                    thread_edge_count += test_edge % thread_count;
+                }
+                threads.push_back(std::thread(
+                    generateGraph, thread_node_index, thread_edge_index,
+                    thread_edge_count, test_nodes, i));
+                int total_nodes = thread_edge_count/test_nodes;
+                thread_edge_index = thread_edge_count % test_nodes;
+
+                thread_node_index += total_nodes;
+            }
+
+            for (auto& thread : threads) {
+                thread.join();
+            }
+
+            std::stringstream filename;
+            filename << INPUTS_FOLDER << "test" << std::to_string(current_test)
+                     << ".in";
+            output.open(filename.str());
+            output << test_nodes << " " << test_edge
+                   << "\n";
+            
+            int out_edges = 0;
+            for (int i = 0; i < thread_count; ++i) {
+                for (auto& edge : threaded_graph[i]) {
+                    if(out_edges != test_edge) {
+                        output << edge << "\n";
+                        out_edges++;
+                    }
+                }
+            }
+
+            output.close();
+            output.clear();
+            filename.str(std::string(""));
+
+            current_test++;
+            current_nodes += nodeRate;
+            std::cout << "test " << current_test << "\n";
+        }
+    }
 };
 
 #endif  // GENERATOR_HPP_

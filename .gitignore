@@ -1,6 +1,7 @@
 algo_test
-generator/Generator
-src/*.o
+generator/generator
+in/*
+*.o
 generator/*.o
 .vscode*
 out/*
