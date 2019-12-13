@@ -11,7 +11,7 @@
 
 #define MIN_DISTANCE 1
 #define MAX_DISTANCE 1
-#define NUM_OF_TESTS 10
+#define NUM_OF_TESTS 100
 #define MAX_NODE_COUNT 10000
 #define MAX_EDGE_COUNT 100000
 #define INPUTS_FOLDER "../in/"

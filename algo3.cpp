@@ -1,7 +1,8 @@
-#include "algo.h"
 #include <queue>
+#include "algo.h"
 
-std::vector<std::vector<int32>> Johnson(const std::vector<std::vector<edge>>& graph) {
+std::vector<std::vector<int32>> Johnson(
+    const std::vector<std::vector<edge>> &graph) {
     // Costly operation, but is needed to restore the original graph
     std::vector<std::vector<std::pair<int, int32>>> auxAdjency =
         std::vector<std::vector<std::pair<int, int32>>>(graph);

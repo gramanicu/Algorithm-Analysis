@@ -1,21 +1,17 @@
 #include "algo.h"
 
+int GlobalVariables::edge_count = 0;
+bool GlobalVariables::has_negatives = false;
+int GlobalVariables::node_count = 0;
+std::vector<std::vector<int32>> GlobalVariables::last_output =
+    std::vector<std::vector<int32>>(0);
+
 std::vector<std::vector<int32>> shortest_path_all(
     const std::vector<std::vector<edge>>& graph) {
-        // if(has_negatives) {
-            return Dijkstra(graph);
-        // } else {
-            // return Johnson(graph);
-        // }
-}
-
-std::vector<std::pair<int, int>> neighbours(
-    const int source, const std::vector<std::vector<edge>>& graph) {
-    std::vector<std::pair<int, int>> neighbours;
-
-    for (auto &link : graph[source]) {
-        neighbours.push_back(link);
-    }
-
-    return neighbours;
+    // if(has_negatives) {
+    GlobalVariables::last_output = Dijkstra(graph);
+    // } else {
+    // return Johnson(graph);
+    // }
+    return GlobalVariables::last_output;
 }
