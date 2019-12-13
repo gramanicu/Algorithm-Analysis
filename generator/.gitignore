@@ -1,0 +1,3 @@
+generator
+sources/*.o
+.vscode*
