@@ -11,11 +11,11 @@ SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
 # Compiles the object files
-build: algo.o algo1.o
+build: algo.o algo1.o algo2.o algo3.o
 	$(info Compilation successfull)
 
 # Compiles the program
-build_test: algo_test.o algo.o algo1.o
+build_test: algo_test.o algo.o algo1.o algo2.o algo3.o
 	$(info Compiling code...)
 	@$(CC) -o $(EXE) $^ $(CFLAGS) ||:
 	$(info Compilation successfull)
@@ -47,8 +47,9 @@ memory:clean build
 # Adds and updates gitignore rules
 gitignore:
 	@echo "$(EXE)" > .gitignore ||:
-	@echo "generator/Generator" >> .gitignore ||:
+	@echo "generator/generator" >> .gitignore ||:
 	@echo "in/*" >> .gitignore ||:
+	@echo "*.o" >> .gitignore ||:
 	@echo "generator/*.o" >> .gitignore ||:
 	@echo ".vscode*" >> .gitignore ||:	
 	@echo "out/*" >> .gitignore ||:	

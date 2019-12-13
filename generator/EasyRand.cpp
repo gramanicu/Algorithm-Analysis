@@ -1,3 +1,4 @@
+// Copyright Grama Nicolae 2019
 #include "EasyRand.h"
 #include <float.h>
 

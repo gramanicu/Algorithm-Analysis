@@ -1,3 +1,4 @@
+// Copyright Grama Nicolae 2019
 #ifndef ALGO_H
 #define ALGO_H
 

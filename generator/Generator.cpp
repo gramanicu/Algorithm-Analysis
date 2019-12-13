@@ -1,3 +1,4 @@
+// Copyright Grama Nicolae 2019
 #include "Generator.hpp"
 
 std::vector<std::vector<Edge>> Generator::threaded_graph;
