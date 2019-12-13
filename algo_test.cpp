@@ -1,6 +1,6 @@
+#include "algo.h"
 #include <fstream>
 #include <iostream>
-#include "algo.h"
 #include <sstream>
 
 #define TEST_COUNT 10
@@ -22,7 +22,7 @@ std::ostream& operator<<(std::ostream& output,
 
 int main() {
     // Right answer tests
-    for (int i = 0; i < TEST_COUNT; i++) { 
+    for (int i = 0; i < TEST_COUNT; i++) {
         std::stringstream filename;
         filename << "./in/test" << i << ".in";
 
@@ -38,13 +38,13 @@ int main() {
             input >> nodeCount >> edgeCount;
 
             edge empty = std::make_pair(0, 0);
-            edges = std::vector<std::vector<edge>>
-            (nodeCount, std::vector<edge>(0, empty));
+            edges = std::vector<std::vector<edge>>(nodeCount,
+                                                   std::vector<edge>(0, empty));
 
-            for (int i = 0 ; i < edgeCount ; i++) {
+            for (int i = 0; i < edgeCount; i++) {
                 int source, target, cost;
                 input >> source >> target >> cost;
-                edges[source-1].push_back(std::make_pair(target, cost));
+                edges[source - 1].push_back(std::make_pair(target, cost));
             }
         }
 

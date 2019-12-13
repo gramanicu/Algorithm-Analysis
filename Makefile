@@ -48,7 +48,7 @@ memory:clean build
 gitignore:
 	@echo "$(EXE)" > .gitignore ||:
 	@echo "generator/Generator" >> .gitignore ||:
-	@echo "src/*.o" >> .gitignore ||:
+	@echo "in/*" >> .gitignore ||:
 	@echo "generator/*.o" >> .gitignore ||:
 	@echo ".vscode*" >> .gitignore ||:	
 	@echo "out/*" >> .gitignore ||:	

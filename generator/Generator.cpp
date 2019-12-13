@@ -1,10 +1,9 @@
-#include "generator.hpp"
+#include "Generator.hpp"
 
 std::vector<std::vector<Edge>> Generator::threaded_graph;
 
 int main() {
     Generator g;
-    g.setup();
-    g.generateTests(100);
+    g.generateTests(NUM_OF_TESTS);
     return 0;
 }
