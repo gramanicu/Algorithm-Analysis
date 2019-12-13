@@ -11,11 +11,11 @@ SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
 # Compiles the object files
-build: algo.o src/FastGraph.o src/SmallGraph.o src/GraphDriver.o
+build: algo.o
 	$(info Compilation successfull)
 
 # Compiles the program
-build_test: algo_test.o algo.o src/FastGraph.o src/SmallGraph.o src/GraphDriver.o
+build_test: algo_test.o algo.o
 	$(info Compiling code...)
 	@$(CC) -o $(EXE) $^ $(CFLAGS) ||:
 	$(info Compilation successfull)

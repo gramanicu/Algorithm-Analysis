@@ -27,7 +27,7 @@ class Edge {
         : source(source), destination(destination), distance(distance){};
 
     friend std::ostream& operator<<(std::ostream& output, const Edge edge) {
-        output << edge.source << " " << edge.destination << " " << edge.distance;
+        output << edge.source + 1 << " " << edge.destination + 1 << " " << edge.distance;
     return output;
     }
 

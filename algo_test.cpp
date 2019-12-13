@@ -21,7 +21,6 @@ std::ostream& operator<<(std::ostream& output,
 }
 
 int main() {
-    // Right answer tests
     for (int i = 0; i < TEST_COUNT; i++) {
         std::stringstream filename;
         filename << "./in/test" << i << ".in";
@@ -36,6 +35,8 @@ int main() {
             int nodeCount, edgeCount;
 
             input >> nodeCount >> edgeCount;
+            node_count = nodeCount;
+            edge_count = edgeCount;
 
             edge empty = std::make_pair(0, 0);
             edges = std::vector<std::vector<edge>>(nodeCount,
@@ -44,7 +45,7 @@ int main() {
             for (int i = 0; i < edgeCount; i++) {
                 int source, target, cost;
                 input >> source >> target >> cost;
-                edges[source - 1].push_back(std::make_pair(target, cost));
+                edges[source - 1].push_back(std::make_pair(target - 1, cost));
             }
         }
 
